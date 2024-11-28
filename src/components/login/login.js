@@ -15,15 +15,8 @@ export const Login = () => {
   const navigation = useNavigation()
 
   const handleLogin = async () => {
-    // console.log('====================================')
-    // console.log(phoneNumber)
-    // console.log('====================================')
     setLoading(true)
     try {
-      // console.log('====================================')
-      // console.log('Attempting login with phone number:', phoneNumber)
-      // console.log('====================================')
-
       await sendOtp(phoneNumber)
     } catch (error) {
       console.error('otp failed:', error)
@@ -44,6 +37,7 @@ export const Login = () => {
         <LoginSection />
         <TextField
           placeholder={'Enter phone number'}
+          keyboardType='numeric'
           icon={'phone-portrait'}
           value={phoneNumber}
           onChangeText={(e) => setPhoneNumber(e.toString())}

@@ -8,3 +8,7 @@ export const highlightsURL = `${API_URL}${version}highlights/`
 export const announcementURL = `${API_URL}${version}announcements`
 export const nokRegistrationURL = `${API_URL}${version}nok/`
 export const echsRegistrationURL = `${API_URL}${version}echs/`
+export const veteranRegistrationURL = `${API_URL}${version}vetran/`
+export const getUserDetailsURL = `${API_URL}${version}auth/user/detail/profile/`
+export const fetchFeedbackURL = `${API_URL}${version}feedback/`
+export const sendFeedbackURL = `${API_URL}${version}feedback/`

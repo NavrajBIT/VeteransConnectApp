@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native'
 import { fetchPosts, fetchTrendingPosts } from '../../api/fetch_announcements'
+import { fetchUserData } from '../../api/get_user_data'
 import Footer from '../../tabs/footer'
+import { Profile } from '../profile/profile'
 import { Search } from '../search/search'
 import { Home } from './home'
 
@@ -9,6 +11,7 @@ export const Layout = () => {
   const [view, setView] = useState('Home')
   const [trendingAnnouncements, setTrendingAnnouncements] = useState([])
   const [announcements, setAnnouncements] = useState([])
+  const [userDetails, setUserDetails] = useState([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -27,6 +30,12 @@ export const Layout = () => {
         if (response) {
           setAnnouncements(response)
           console.log(`Fetched ${response.length} announcements`)
+        }
+
+        // get user details
+        const userDetails = await fetchUserData()
+        if (userDetails) {
+          setUserDetails(userDetails)
         }
       } catch (error) {
         console.error('Error fetching announcements:', error)
@@ -51,6 +60,8 @@ export const Layout = () => {
           <Home announcements={trendingAnnouncements} />
         ) : view === 'Search' ? (
           <Search announcements={announcements} />
+        ) : view === 'Profile' ? (
+          <Profile userDetails={userDetails} />
         ) : null}
       </ScrollView>
 
