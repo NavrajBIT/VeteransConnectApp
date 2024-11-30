@@ -63,27 +63,29 @@ export const register = async ({
     console.log('here')
     console.log('====================================')
 
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
     const response = await fetch(registerURL, {
       method: 'POST',
       body: formData,
+      
     })
 
     console.log('====================================')
     console.log(response.status)
     console.log('====================================')
 
+
     if (response.ok || response.status === 401) {
-      const result = await response.json()
-      console.log('====================================')
-      console.log(result)
-      console.log('====================================')
+      const result = await response.json();
+      console.log('Success:', result);
     } else {
-      const errorData = await response.json()
-      //   showSnackBar(errorData.message || 'An error occurred')
+      const errorData = await response.json();
+      console.error('Error:', errorData.message || 'Unknown error occurred.');
     }
   } catch (error) {
-    // showSnackBar(error.message || 'An unexpected error occurred')
-  } finally {
-    // showSnackBar(error.message || 'An unexpected error occurred')
+    console.error('Caught Exception:', error.message || 'An unexpected error occurred.');
   }
 }
