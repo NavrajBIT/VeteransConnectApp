@@ -45,6 +45,8 @@ export const ViewFeedback = () => {
                   title='View'
                   onPress={() => {
                     console.log(`Viewing feedback: ${feedback.id}`)
+                    const id = feedback.id
+                    navigation.navigate('Feedback', { id })
                   }}
                 />
               </View>

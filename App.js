@@ -6,6 +6,7 @@ import { StyleSheet } from 'react-native'
 
 import { BlogDetails } from './src/components/blog_details/blogDetails'
 import { EchsRegistration } from './src/components/echs_registration/echs_registration'
+import { Feedback } from './src/components/feedback/feedback'
 import { SendFeedback } from './src/components/feedback/send_feedback'
 import { ViewFeedback } from './src/components/feedback/view_feedback'
 import { Layout } from './src/components/home/layout'
@@ -55,6 +56,7 @@ export default function App() {
         <Stack.Screen name='EditProfile' component={EditProfile} />
         <Stack.Screen name='ViewFeedback' component={ViewFeedback} />
         <Stack.Screen name='SendFeedback' component={SendFeedback} />
+        <Stack.Screen name='Feedback' component={Feedback} />
         <Stack.Screen
           name='VeteransRegistration'
           component={VeteransRegistration}
