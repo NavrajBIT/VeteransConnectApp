@@ -30,10 +30,9 @@ export const Services = () => {
           key={index}
           style={styles.serviceItem}
           onPress={() => {
-            if (index === 0) navigation.navigate('Register')
+            if (index === 0) navigation.navigate('VeteransRegistration')
             if (index === 1) navigation.navigate('NokRegistration')
             if (index === 2) navigation.navigate('EchsRegistration')
-            // AsyncStorage.clear()
           }}
         >
           <Text style={styles.serviceIcon}>{service.icon}</Text>

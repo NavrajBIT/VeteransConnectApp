@@ -24,6 +24,12 @@ const Footer = ({ view, setView }) => {
         color={view === 'Search' ? '#885CCD' : '#000000'}
         onPress={() => setView('Search')}
       />
+      <FontAwesome
+        name='user'
+        size={30}
+        color={view === 'Profile' ? '#885CCD' : '#000000'}
+        onPress={() => setView('Profile')}
+      />
     </View>
   )
 }
