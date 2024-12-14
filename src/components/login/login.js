@@ -1,73 +1,105 @@
-import { useNavigation } from '@react-navigation/native'
-import { useState } from 'react'
-import { Alert, TouchableOpacity, View } from 'react-native'
-import { sendOtp } from '../../api/send_otp'
-import { PrimaryButton } from '../../subcomponents/button'
-import { Container } from '../../subcomponents/container'
-import { BoldText, PrimaryText } from '../../subcomponents/text'
-import { TextField } from '../../subcomponents/textfield'
-import { LoginSection } from './subcomponents/login_section'
+import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
+import { TouchableOpacity, View } from "react-native";
+import { sendOtp } from "../../api/send_otp";
+import { PrimaryButton } from "../../subcomponents/button";
+import { Container } from "../../subcomponents/container";
+import { BoldText, PrimaryText } from "../../subcomponents/text";
+import { TextField } from "../../subcomponents/textfield";
+import { LoginSection } from "./subcomponents/login_section";
+import Loadingscreen from "../../subcomponents/loadingscreen/loadingscreen";
+import Popup from "../../subcomponents/popup";
 
 export const Login = () => {
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(null);
+  const [cta, setCta] = useState(null);
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const handleLogin = async () => {
-    setLoading(true)
-    try {
-      await sendOtp(phoneNumber)
-    } catch (error) {
-      console.error('otp failed:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+    setLoading(true);
+    setCta(null);
+    await sendOtp(phoneNumber)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          navigation.navigate("OtpScreen", { phoneNumber });
+        } else if (res.status == 404) {
+          setStatus({
+            title: "Error",
+            text: "No account exists with this phone number. Please sign up.",
+          });
+          setCta({
+            title: "Sign Up",
+            onPress: () => navigation.navigate("Register"),
+          });
+        } else if (res.status == 401) {
+          setStatus({
+            title: "Error",
+            text: "Your Account is under review by the Admin. Please contact your Admin.",
+          });
+        } else {
+          setStatus({
+            title: "Error",
+            text: "Something went wrong. Please contact your Admin.",
+          });
+        }
+      })
+      .catch((err) =>
+        setStatus({
+          title: "Error",
+          text: "Something went wrong. Please contact your Admin.",
+        })
+      );
+
+    setLoading(false);
+  };
+  if (loading) return <Loadingscreen text="Signing In..." />;
   return (
     <Container>
+      <Popup status={status} setStatus={setStatus} cta={cta} />
       <View
         style={{
           flex: 1,
-          justifyContent: 'center',
+          justifyContent: "center",
           gap: 20,
         }}
       >
-        <BoldText children={'Welcome Back'} fontSize={30} />
+        <BoldText children={"Welcome Back"} fontSize={30} />
         <LoginSection />
         <TextField
-          placeholder={'Enter phone number'}
-          keyboardType='numeric'
-          icon={'phone-portrait'}
+          placeholder={"Enter Mobile Number"}
+          keyboardType="numeric"
+          icon={"phone-portrait"}
           value={phoneNumber}
           onChangeText={(e) => setPhoneNumber(e.toString())}
         />
         <PrimaryButton
-          title={'Submit'}
+          title={"Submit"}
           onPress={() => {
-            if (phoneNumber.length < 10 || phoneNumber === '') {
-              // Alert('Please enter a valid phone number.')
-              Alert.alert(
-                'Invalid phone number',
-                'Please enter a valid phone number.'
-              )
+            if (phoneNumber.length != 10) {
+              setStatus({
+                title: "Invalid Mobile Number",
+                text: "Please enter a valid Mobile Number.",
+              });
             } else {
-              handleLogin()
-              navigation.navigate('OtpScreen', { phoneNumber })
+              handleLogin();
             }
           }}
         />
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
           <PrimaryText children={"Don't have an account?"} fontSize={16} />
-          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
             <PrimaryText
-              children={'  Sign Up'}
+              children={"  Sign Up"}
               fontSize={16}
-              color={'#9164D8'}
+              color={"#9164D8"}
             />
           </TouchableOpacity>
         </View>
       </View>
     </Container>
-  )
-}
+  );
+};

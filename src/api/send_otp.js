@@ -1,23 +1,12 @@
-import { sendOtpURL } from '../constants/api_constants'
+import { sendOtpURL } from "../constants/api_constants";
 
 export const sendOtp = async (mobileNumber) => {
-  const token = ''
-  try {
-    const response = await fetch(
-      `${sendOtpURL}?phone_number=91${mobileNumber}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      }
-    )
+  const token = "";
 
-    if (response.ok) {
-    }
-  } catch (error) {
-    console.log('====================================')
-    console.log(`error catch block ${error}`)
-    console.log('====================================')
-  }
-}
+  return await fetch(`${sendOtpURL}?phone_number=${mobileNumber}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
