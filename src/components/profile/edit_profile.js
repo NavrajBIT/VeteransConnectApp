@@ -189,7 +189,7 @@ export const EditProfile = ({ route }) => {
           <TextField
             label={"Alternate Contact Number"}
             placeholder={"Enter Alternate Contact Number"}
-            value={mobileNumber}
+            value={altMobileNumber}
             onChangeText={(e) => setAltMobileNumber(e.toString())}
           />
           <TextField

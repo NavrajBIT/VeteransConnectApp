@@ -45,7 +45,7 @@ export const OtpScreen = ({ route }) => {
           await AsyncStorage.setItem("token", data.data);
           console.log(data);
           navigation.navigate("Layout");
-        } else if (res.status == 404) {
+        } else if (res.status == 400) {
           setStatus({
             title: "Error",
             text: "This account does not exist. Please sign up.",
@@ -69,7 +69,8 @@ export const OtpScreen = ({ route }) => {
             title: "Get Started",
             onPress: () => navigation.navigate("Starter"),
           });
-        } else {
+        }  
+        else {
           setStatus({
             title: "Error",
             text: "Something went wrong. Please contact your Admin.",
@@ -82,6 +83,7 @@ export const OtpScreen = ({ route }) => {
           title: "Error",
           text: "Something went wrong. Please contact your Admin.",
         });
+        
       });
   };
 

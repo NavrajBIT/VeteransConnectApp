@@ -26,7 +26,7 @@ export const Login = () => {
         console.log(res);
         if (res.status === 200) {
           navigation.navigate("OtpScreen", { phoneNumber });
-        } else if (res.status == 404) {
+        } else if (res.status == 400) {
           setStatus({
             title: "Error",
             text: "No account exists with this phone number. Please sign up.",
@@ -40,7 +40,13 @@ export const Login = () => {
             title: "Error",
             text: "Your Account is under review by the Admin. Please contact your Admin.",
           });
-        } else {
+        } else if (res.status == 409) {
+          setStatus({
+            title: "Error",
+            text: "Your Profile has been Rejected. Please check the details and re-submit the form.",
+          });
+        } 
+        else {
           setStatus({
             title: "Error",
             text: "Something went wrong. Please contact your Admin.",
