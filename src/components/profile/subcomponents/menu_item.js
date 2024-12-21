@@ -6,7 +6,6 @@ import { translation } from "../../../subcomponents/localization/translation";
 
 const MenuItem = ({ icon, label, onPress }) => {
   const { ln } = Preferences();
-  console.log(ln);
 
   try {
     label = ln === "en" ? label : translation[label][ln];

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { PrimaryText } from "../../../subcomponents/text";
 
 export const AnnouncementCarousel = ({ announcements, th }) => {
   const navigation = useNavigation();
@@ -68,7 +69,12 @@ export const AnnouncementCarousel = ({ announcements, th }) => {
           );
         })
       ) : (
-        <Text>No announcements available</Text>
+        <View style={{ paddingLeft: 20 }}>
+          <PrimaryText
+            children={"No announcements available yet."}
+            fontSize={th == 1 ? 12 : th == 2 ? 18 : 24}
+          />
+        </View>
       )}
     </ScrollView>
   );

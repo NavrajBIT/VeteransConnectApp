@@ -1,5 +1,6 @@
-import { useNavigation } from '@react-navigation/native'
-import { useState } from 'react'
+import { useNavigation } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -8,151 +9,246 @@ import {
   Switch,
   TouchableOpacity,
   View,
-} from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { registerUserECHS } from '../../api/echs_registration'
-import { PrimaryButton } from '../../subcomponents/button'
-import DropdownField from '../../subcomponents/dropdown/dropdown'
-import { BoldText, PrimaryText } from '../../subcomponents/text'
-import { TextField } from '../../subcomponents/textfield'
+  Image,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { registerUserECHS } from "../../api/echs_registration";
+import { PrimaryButton } from "../../subcomponents/button";
+import DropdownField from "../../subcomponents/dropdown/dropdown";
+import { BoldText, PrimaryText } from "../../subcomponents/text";
+import { TextField } from "../../subcomponents/textfield";
+import Popup from "../../subcomponents/popup";
+import Loadingscreen from "../../subcomponents/loadingscreen/loadingscreen";
+import { fetchUserData } from "../../api/get_user_data";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const EchsRegistration = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
-  const [firstName, setFirstName] = useState('')
-  const [middleName, setMiddleName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [mobileNumber, setMobileNumber] = useState('')
-  const [altMobileNumber, setAltMobileNumber] = useState('')
-  const [serviceNumber, setServiceNumber] = useState('')
-  const [aadharCardNumber, setaadharCardNumber] = useState('')
-  const [panCard, setpanCard] = useState('')
-  const [accountNumber, setaccountNumber] = useState('')
-  const [tehsil, settehsil] = useState('')
-  const [district, setdistrict] = useState('')
-  const [village, setvillage] = useState('')
-  const [city, setcity] = useState('')
-  const [state, setstate] = useState('')
-  const [pinCode, setpinCode] = useState('')
+  const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [altMobileNumber, setAltMobileNumber] = useState("");
+  const [serviceNumber, setServiceNumber] = useState("");
+  const [aadharCardNumber, setaadharCardNumber] = useState("");
+  const [panCard, setpanCard] = useState("");
+  const [accountNumber, setaccountNumber] = useState("");
+  const [tehsil, settehsil] = useState("");
+  const [district, setdistrict] = useState("");
+  const [village, setvillage] = useState("");
+  const [city, setcity] = useState("");
+  const [state, setstate] = useState("");
+  const [pinCode, setpinCode] = useState("");
 
-  const [echsFrontImage, setechsFrontImage] = useState(null)
-  const [echsBackImage, setechsBackImage] = useState(null)
+  const [echsFrontImage, setechsFrontImage] = useState(null);
+  const [echsBackImage, setechsBackImage] = useState(null);
 
-  const [serviceType, setserviceType] = useState('')
+  const [serviceType, setserviceType] = useState("");
   const serviceOptions = [
-    { label: 'Army', value: 'army' },
-    { label: 'Married', value: 'navy' },
-    { label: 'Air Force', value: 'airForce' },
-  ]
+    { label: "Army", value: "army" },
+    { label: "Married", value: "navy" },
+    { label: "Air Force", value: "airForce" },
+  ];
 
-  const [category, setcategory] = useState('')
+  const [category, setcategory] = useState("");
   const categoryOptions = [
-    { label: 'Officer', value: 'officer' },
-    { label: 'JCO', value: 'jco' },
-    { label: 'OR', value: 'or' },
-  ]
+    { label: "Officer", value: "officer" },
+    { label: "JCO", value: "jco" },
+    { label: "OR", value: "or" },
+  ];
 
-  const [alive, setAlive] = useState(false)
-  const toggleAliveSwitch = () => setAlive((previousState) => !previousState)
+  const [alive, setAlive] = useState(false);
+  const toggleAliveSwitch = () => setAlive((previousState) => !previousState);
 
-  const [primaryMember, setPrimaryMember] = useState(false)
+  const [primaryMember, setPrimaryMember] = useState(false);
   const togglePrimarySwitch = () =>
-    setPrimaryMember((previousState) => !previousState)
+    setPrimaryMember((previousState) => !previousState);
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(null);
+
+  const pickImage = async (setImage) => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   const handleSubmit = async () => {
-    try {
-      setLoading(true)
-      if (
-        !firstName ||
-        !lastName ||
-        !mobileNumber ||
-        !serviceNumber ||
-        !accountNumber ||
-        !tehsil ||
-        !district ||
-        !city ||
-        !village ||
-        !state ||
-        !pinCode ||
-        !echsFrontImage ||
-        !echsBackImage
-      ) {
-        setLoading(false)
-        throw new Error('Please fill all required fields.')
-      } else {
-        await registerUserECHS({
-          isUpdate: false,
-          id: '',
-          echsCardFront: echsFrontImage,
-          echsCardBack: echsBackImage,
-          firstName,
-          middleName,
-          lastName,
-          mobileNumber,
-          altMobileNumber,
-          isAlive: alive,
-          serviceType,
-          category,
-          serviceNumber,
-          accountNumber,
-          adharCardNumber: aadharCardNumber,
-          panCard,
-          primaryMember,
-          tehsil,
-          district,
-          village,
-          city,
-          state,
-          pinCode,
+    setLoading(true);
+    if (
+      !firstName ||
+      !lastName ||
+      !mobileNumber ||
+      !serviceNumber ||
+      !accountNumber ||
+      !tehsil ||
+      !district ||
+      !city ||
+      !village ||
+      !state ||
+      !pinCode
+    ) {
+      setLoading(false);
+      setStatus({
+        title: "Error",
+        text: "Please fill all * marked fields.",
+      });
+    } else if (!echsFrontImage || !echsBackImage) {
+      setLoading(false);
+      setStatus({
+        title: "Error",
+        text: "Please Select Images.",
+      });
+    } else {
+      await registerUserECHS({
+        isUpdate: false,
+        id: "",
+        echsCardFront: echsFrontImage,
+        echsCardBack: echsBackImage,
+        firstName,
+        middleName,
+        lastName,
+        mobileNumber,
+        altMobileNumber,
+        isAlive: alive,
+        serviceType,
+        category,
+        serviceNumber,
+        accountNumber,
+        adharCardNumber: aadharCardNumber,
+        panCard,
+        primaryMember,
+        tehsil,
+        district,
+        village,
+        city,
+        state,
+        pinCode,
+      })
+        .then((res) => {
+          console.log(res);
+          if (res.status >= 200 && res.status <= 299) {
+            alert(
+              "Request Submitted Successfully. Your application is under review by the admin. आपका खाता व्यवस्थापक द्वारा समीक्षाधीन है. कृपया अपने व्यवस्थापक से संपर्क करें. તમારું એકાઉન્ટ એડમિન દ્વારા સમીક્ષા હેઠળ છે. કૃપા કરીને તમારા એડમિનનો સંપર્ક કરો."
+            );
+            navigation.navigate("Layout");
+          } else {
+            setStatus({
+              title: "Error",
+              text: "Something went wrong. Please contact your Admin.",
+            });
+          }
+          return res;
         })
-        console.log('ECHS Form submitted')
-        setLoading(false)
-        navigation.navigate('Layout')
-      }
-    } catch (error) {
-      console.log(error.message || 'An unexpected error occurred')
-      setLoading(false)
+        .then((res) => res.json())
+        .then((res) => console.log(res))
+        .catch((err) => {
+          console.log(err);
+          setStatus({
+            title: "Error",
+            text: "Something went wrong. Please contact your Admin.",
+          });
+        });
+
+      setLoading(false);
     }
-  }
+  };
+
+  const poppulateUserData = async () => {
+    setLoading(true);
+    await fetchUserData()
+      .then(async (res) => {
+        if (res.status == 401) {
+          await AsyncStorage.clear();
+          navigation.navigate("Loader");
+        }
+        return res;
+      })
+      .then((res) => res.json())
+      .then((res) => {
+        const data = res.data;
+        setMiddleName(data.user.middle_name);
+        setMobileNumber(data.user.phone_number ?? "");
+        setFirstName(data.user.first_name ?? "");
+        setLastName(data.user.last_name ?? "");
+        setServiceNumber(data.service_no ?? "");
+        setaccountNumber(data.account_no ?? "");
+        setaadharCardNumber(data.aadhar_card_no ?? "");
+        setpanCard(data.pan_card_no ?? "");
+        setcity(data.city ?? "");
+        setstate(data.state ?? "");
+        setpinCode(data.pincode ?? "");
+        setAltMobileNumber(data.alternate_contact_no ?? "");
+      })
+      .catch((err) => console.log(err));
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    poppulateUserData();
+  }, []);
+
+  if (loading) return <Loadingscreen />;
 
   return (
     <SafeAreaView style={styles.container}>
+      <Popup status={status} setStatus={setStatus} />
+      <TouchableOpacity
+        style={{ paddingLeft: 20 }}
+        onPress={() => navigation.navigate("Layout")}
+      >
+        <PrimaryText children={"<"} textAlign={"left"} fontSize={60} />
+      </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <BoldText
-          children={'ECHS Registration'}
+          children={"ECHS Registration"}
           fontSize={20}
-          textAlign={'left'}
+          textAlign={"left"}
         />
         <View style={{ paddingTop: 20 }}>
           <TextField
-            placeholder={'Enter First Name'}
+            label={"First Name"}
+            required
+            placeholder={"Enter First Name"}
             value={firstName}
             onChangeText={(e) => setFirstName(e.toString())}
           />
           <TextField
-            placeholder={'Enter Middle Name'}
+            label={"Middle Name"}
+            placeholder={"Enter Middle Name"}
             value={middleName}
             onChangeText={(e) => setMiddleName(e.toString())}
           />
           <TextField
-            placeholder={'Enter Last Name'}
+            label={"Last Name"}
+            required
+            placeholder={"Enter Last Name"}
             value={lastName}
             onChangeText={(e) => setLastName(e.toString())}
           />
           <TextField
-            placeholder={'Enter Mobile Number'}
+            label={"Mobile Number"}
+            required
+            placeholder={"Enter Mobile Number"}
             value={mobileNumber}
             onChangeText={(e) => setMobileNumber(e.toString())}
           />
           <TextField
-            placeholder={'Enter Alternate Mobile Number'}
+            label={"Alternate Contact Number"}
+            placeholder={"Enter Alternate Contact Number"}
             value={altMobileNumber}
             onChangeText={(e) => setAltMobileNumber(e.toString())}
           />
           <View style={styles.switchContainer}>
-            <PrimaryText fontSize={16}>{'Alive'}</PrimaryText>
+            <PrimaryText fontSize={16}>{"Alive"}</PrimaryText>
             <Switch
               style={styles.switch}
               onValueChange={toggleAliveSwitch}
@@ -160,41 +256,47 @@ export const EchsRegistration = () => {
             />
           </View>
           <DropdownField
-            label={'Service Type'}
+            label={"Service Type"}
             options={serviceOptions}
             selectedValue={serviceType}
             onValueChange={setserviceType}
-            placeholder='Select Service Type'
+            placeholder="Select Service Type"
           />
           <DropdownField
-            label={'Category'}
+            label={"Category"}
             options={categoryOptions}
             selectedValue={category}
             onValueChange={setcategory}
-            placeholder='Select Category'
+            placeholder="Select Category"
           />
           <TextField
-            placeholder={'Enter Service Number'}
+            label={"Service Number"}
+            required
+            placeholder={"Enter Service Number"}
             value={serviceNumber}
             onChangeText={(e) => setServiceNumber(e.toString())}
           />
           <TextField
-            placeholder={'Enter Aadhar Number'}
+            label={"Aadhar Number"}
+            placeholder={"Enter Aadhar Number"}
             value={aadharCardNumber}
             onChangeText={(e) => setaadharCardNumber(e.toString())}
           />
           <TextField
-            placeholder={'Enter Pan Card Number'}
+            label={"Pan Card Number"}
+            placeholder={"Enter Pan Card Number"}
             value={panCard}
             onChangeText={(e) => setpanCard(e.toString())}
           />
           <TextField
-            placeholder={'Enter Account number'}
+            label={"Account Number"}
+            required
+            placeholder={"Enter Account Number"}
             value={accountNumber}
             onChangeText={(e) => setaccountNumber(e.toString())}
           />
           <View style={styles.switchContainer}>
-            <PrimaryText fontSize={16}>{'Primary Member'}</PrimaryText>
+            <PrimaryText fontSize={16}>{"Primary Member"}</PrimaryText>
             <Switch
               style={styles.switch}
               onValueChange={togglePrimarySwitch}
@@ -202,116 +304,186 @@ export const EchsRegistration = () => {
             />
           </View>
           <TextField
-            placeholder={'Enter Tehsil'}
+            label={"Tehsil"}
+            required
+            placeholder={"Enter Tehsil"}
             value={tehsil}
             onChangeText={(e) => settehsil(e.toString())}
           />
           <TextField
-            placeholder={'Enter District'}
+            label={"District"}
+            required
+            placeholder={"Enter District"}
             value={district}
             onChangeText={(e) => setdistrict(e.toString())}
           />
           <TextField
-            placeholder={'Enter Village'}
+            label={"Village"}
+            required
+            placeholder={"Enter Village"}
             value={village}
             onChangeText={(e) => setvillage(e.toString())}
           />
           <TextField
-            placeholder={'Enter City'}
+            label={"City"}
+            required
+            placeholder={"Enter City"}
             value={city}
             onChangeText={(e) => setcity(e.toString())}
           />
           <TextField
-            placeholder={'Enter State'}
+            label={"State"}
+            required
+            placeholder={"Enter State"}
             value={state}
             onChangeText={(e) => setstate(e.toString())}
           />
           <TextField
-            placeholder={'Enter Pin Code'}
+            label={"Pin Code"}
+            required
+            placeholder={"Enter Pin Code"}
             value={pinCode}
             onChangeText={(e) => setpinCode(e.toString())}
           />
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              paddingHorizontal: 40,
-              paddingVertical: 20,
+              paddingTop: 10,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <PrimaryText children={'Echs Card Front Image'} fontSize={16} />
-            {echsFrontImage !== null ? (
-              <PrimaryText children={'Selected'} fontSize={16} />
-            ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  pickImage(setechsFrontImage)
+            {echsFrontImage && (
+              <Image
+                style={{
+                  width: 200,
+                  height: 150,
+                  borderWidth: 1,
+                  borderRadius: 10,
                 }}
-              >
-                <PrimaryText
-                  children={'Select Image'}
-                  fontSize={16}
-                  color={'#9164D8'}
-                />
-              </TouchableOpacity>
+                source={{ uri: echsFrontImage }}
+              />
             )}
           </View>
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
+              flexDirection: "row",
+              justifyContent: "space-between",
               paddingHorizontal: 40,
               paddingVertical: 20,
             }}
           >
-            <PrimaryText children={'Echs Card Back Image'} fontSize={16} />
-            {echsBackImage !== null ? (
-              <PrimaryText children={'Selected'} fontSize={16} />
-            ) : (
+            <PrimaryText children={"Echs Card Front Image"} fontSize={16} />
+            {echsFrontImage !== null ? (
               <TouchableOpacity
                 onPress={() => {
-                  pickImage(setechsBackImage)
+                  pickImage(setechsFrontImage);
                 }}
               >
                 <PrimaryText
-                  children={'Select Image'}
+                  children={"Change Image"}
                   fontSize={16}
-                  color={'#9164D8'}
+                  color={"#9164D8"}
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  pickImage(setechsFrontImage);
+                }}
+              >
+                <PrimaryText
+                  children={"Select Image"}
+                  fontSize={16}
+                  color={"#9164D8"}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          <View
+            style={{
+              paddingTop: 10,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {echsBackImage && (
+              <Image
+                style={{
+                  width: 200,
+                  height: 150,
+                  borderWidth: 1,
+                  borderRadius: 10,
+                }}
+                source={{ uri: echsBackImage }}
+              />
+            )}
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingHorizontal: 40,
+              paddingVertical: 20,
+            }}
+          >
+            <PrimaryText children={"Echs Card Back Image"} fontSize={16} />
+            {echsBackImage !== null ? (
+              <TouchableOpacity
+                onPress={() => {
+                  pickImage(setechsBackImage);
+                }}
+              >
+                <PrimaryText
+                  children={"Change Image"}
+                  fontSize={16}
+                  color={"#9164D8"}
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  pickImage(setechsBackImage);
+                }}
+              >
+                <PrimaryText
+                  children={"Select Image"}
+                  fontSize={16}
+                  color={"#9164D8"}
                 />
               </TouchableOpacity>
             )}
           </View>
         </View>
         <View
-          style={{ width: Dimensions.get('window').width - 40, paddingTop: 20 }}
+          style={{ width: Dimensions.get("window").width - 40, paddingTop: 20 }}
         >
-          {loading ? (
-            <ActivityIndicator size='large' color='#9164D8' />
-          ) : (
-            <PrimaryButton title={'Submit'} onPress={handleSubmit} />
-          )}
+          <PrimaryButton title={"Submit"} onPress={handleSubmit} />
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: "#F9F9F9",
   },
   scrollContainer: {
     paddingHorizontal: 20,
     paddingVertical: 30,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
   },
   switchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
     marginTop: 15,
     marginBottom: 15,
     paddingHorizontal: 20,
@@ -319,4 +491,4 @@ const styles = StyleSheet.create({
   switch: {
     transform: [{ scale: 1.5 }],
   },
-})
+});

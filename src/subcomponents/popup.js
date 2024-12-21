@@ -35,7 +35,7 @@ const Popup = ({ status, setStatus, cta }) => {
         position: "absolute",
         top: 0,
         left: 0,
-        backgroundColor: "rgba(0,0,0,0.9)",
+        backgroundColor: "rgba(0,0,0,0.6)",
         zIndex: 5,
         display: "flex",
         alignItems: "center",
@@ -50,6 +50,7 @@ const Popup = ({ status, setStatus, cta }) => {
           borderRadius: 10,
           display: "flex",
           gap: 10,
+          width: "100%",
         }}
       >
         {status.title && (

@@ -15,8 +15,10 @@ import { Home } from "./home";
 import Loadingscreen from "../../subcomponents/loadingscreen/loadingscreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Preferences from "../../subcomponents/preferences";
+import { useNavigation } from "@react-navigation/native";
 
 export const Layout = () => {
+  const navigation = useNavigation();
   const { ln, th } = Preferences();
   const [view, setView] = useState("Home");
   const [trendingAnnouncements, setTrendingAnnouncements] = useState([]);
@@ -51,15 +53,20 @@ export const Layout = () => {
 
   const fetchData = async () => {
     // Fetch trending posts
-    await fetchTrendingPosts().then(async (res) => {
-      if (res.ok) {
-        data = await res.json();
+    await fetchTrendingPosts()
+      .then(async (res) => {
+        if (res.ok) {
+          data = await res.json();
 
-        if (data.results) {
-          setTrendingAnnouncements(data.results);
+          if (data.results) {
+            setTrendingAnnouncements(data.results);
+          }
+        } else if (res.status == 401) {
+          await AsyncStorage.clear();
+          navigation.navigate("Loader");
         }
-      }
-    });
+      })
+      .catch((err) => console.log(err));
 
     // Fetch general posts
     const response = await fetchPosts()
@@ -70,6 +77,9 @@ export const Layout = () => {
           if (data.results) {
             setAnnouncements(data.results);
           }
+        } else if (res.status == 401) {
+          await AsyncStorage.clear();
+          navigation.navigate("Loader");
         }
       })
       .catch((err) => console.log(err));
@@ -85,6 +95,9 @@ export const Layout = () => {
         if (res.ok) {
           const data = await res.json();
           setUserDetails(data);
+        } else if (res.status == 401) {
+          await AsyncStorage.clear();
+          navigation.navigate("Loader");
         }
       })
       .catch((err) => console.log(err));
@@ -93,10 +106,15 @@ export const Layout = () => {
   };
   useEffect(() => {
     fetchData();
+  }, []);
+  useEffect(() => {
+    console.log("--------------");
+    console.log(th);
     if (!isNaN(th)) {
+      console.log(`setting text height: ${th}`);
       setTextheight(th);
     }
-  }, []);
+  }, [th]);
 
   if (loading) return <Loadingscreen />;
 
