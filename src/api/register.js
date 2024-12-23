@@ -10,6 +10,7 @@ export const register = async ({
   serviceNumber,
   rank,
   echsCardNo,
+  otp,
 }) => {
   const formData = new FormData();
   formData.append("echs_primary_card_image", echsPrimaryCardImage);
@@ -45,10 +46,7 @@ export const register = async ({
   formData.append("pincode", "");
   formData.append("post_office_code", "");
   formData.append("nature_of_disability", "");
-
-  // for (let [key, value] of formData.entries()) {
-  //   console.log(`${key}: ${value}`);
-  // }
+  formData.append("otp", otp);
 
   return await fetch(registerURL, {
     method: "POST",

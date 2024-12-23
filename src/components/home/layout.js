@@ -52,6 +52,13 @@ export const Layout = () => {
   };
 
   const fetchData = async () => {
+    const token = await AsyncStorage.getItem("token");
+    console.log("Fetch data in layout ----");
+    console.log(token);
+    if (!token || token == "null") {
+      console.log("token not found");
+      return;
+    }
     // Fetch trending posts
     await fetchTrendingPosts()
       .then(async (res) => {
@@ -106,6 +113,12 @@ export const Layout = () => {
   };
   useEffect(() => {
     fetchData();
+
+    const myInterval = setInterval(() => {
+      fetchData();
+    }, 60000);
+
+    return () => clearInterval(myInterval);
   }, []);
   useEffect(() => {
     console.log("--------------");

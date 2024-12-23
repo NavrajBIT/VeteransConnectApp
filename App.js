@@ -13,6 +13,7 @@ import { Layout } from "./src/components/home/layout";
 import { Login } from "./src/components/login/login";
 import { NokRegistration } from "./src/components/nok_registration/nok_registration";
 import { OtpScreen } from "./src/components/otp/otp";
+import { OtpScreenSignup } from "./src/components/otp/otpsignup";
 import { EditProfile } from "./src/components/profile/edit_profile";
 import { Register } from "./src/components/register/register";
 import { Search } from "./src/components/search/search";
@@ -40,6 +41,7 @@ export default function App() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="OtpScreen" component={OtpScreen} />
+        <Stack.Screen name="OtpScreenSignup" component={OtpScreenSignup} />
 
         <Stack.Screen name="BlogDetails" component={BlogDetails} />
         <Stack.Screen name="NokRegistration" component={NokRegistration} />

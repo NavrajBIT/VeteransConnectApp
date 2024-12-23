@@ -9,6 +9,7 @@ import { BoldText, PrimaryText } from "../../subcomponents/text";
 import { TextField } from "../../subcomponents/textfield";
 import Loadingscreen from "../../subcomponents/loadingscreen/loadingscreen";
 import Popup from "../../subcomponents/popup";
+import { sendOtp } from "../../api/send_otp";
 
 export const Register = () => {
   const navigation = useNavigation();
@@ -62,29 +63,20 @@ export const Register = () => {
         setLoading(false);
         setStatus({ title: "Error", text: "Please provide ECHS card image." });
       } else {
-        await register({
-          echsCardNo,
-          firstName,
-          middleName,
-          lastName,
-          phoneNumber,
-          alternateContact,
-          serviceNumber,
-          rank,
-          echsPrimaryCardImage,
-        })
         await sendOtp(phoneNumber)
           .then((res) => {
-            if (res.status >= 200 && res.status <= 299) {
-              navigation.navigate("OtpScreen")
-              alert(
-                "Request Submitted Successfully. Your application is under review by the admin. आपका खाता व्यवस्थापक द्वारा समीक्षाधीन है. कृपया अपने व्यवस्थापक से संपर्क करें. તમારું એકાઉન્ટ એડમિન દ્વારા સમીક્ષા હેઠળ છે. કૃપા કરીને તમારા એડમિનનો સંપર્ક કરો."
-              );
-              navigation.navigate("Loader");
-            } else if (res.status === 401) {
-              setStatus({
-                title: phoneNumber,
-                text: "This phone number is already registered. Please log in or try another phone number.",
+            console.log(res);
+            if (res.ok) {
+              navigation.navigate("OtpScreenSignup", {
+                echsCardNo,
+                firstName,
+                middleName,
+                lastName,
+                phoneNumber,
+                alternateContact,
+                serviceNumber,
+                rank,
+                echsPrimaryCardImage,
               });
             } else {
               setStatus({

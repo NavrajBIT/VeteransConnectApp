@@ -5,7 +5,7 @@ import { OtpImageSection } from "./subcomponents/image_section";
 
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { Dimensions, View } from "react-native";
+import { Dimensions, View, TouchableOpacity } from "react-native";
 import { login } from "../../api/login";
 import { sendOtp } from "../../api/send_otp";
 import { OtpInput } from "./subcomponents/otp_input";
@@ -13,9 +13,12 @@ import { OtpTimer } from "./subcomponents/otp_timer";
 import Popup from "../../subcomponents/popup";
 import Loadingscreen from "../../subcomponents/loadingscreen/loadingscreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { register } from "../../api/register";
 
-export const OtpScreen = ({ route }) => {
-  const { phoneNumber } = route.params;
+export const OtpScreenSignup = ({ route }) => {
+  console.log("-------------------------");
+  console.log(route.params);
+  const { phoneNumber } = route.params ?? "";
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [isResendDisabled, setIsResendDisabled] = useState(false);
   const [status, setStatus] = useState(null);
@@ -36,47 +39,40 @@ export const OtpScreen = ({ route }) => {
 
   const handleSubmit = async () => {
     const otpCode = otp.join("");
-
-    await login(phoneNumber, otpCode)
-      .then(async (res) => {
-        console.log(res.status);
+    console.log(otpCode);
+    setLoading(true);
+    await register({
+      echsCardNo: route.params.echsCardNo,
+      firstName: route.params.firstName,
+      middleName: route.params.middleName,
+      lastName: route.params.lastName,
+      phoneNumber: route.params.phoneNumber,
+      alternateContactNo: route.params.alternateContact,
+      serviceNumber: route.params.serviceNumber,
+      rank: route.params.rank,
+      echsPrimaryCardImage: route.params.echsPrimaryCardImage,
+      otp: otpCode,
+    })
+      .then((res) => {
+        console.log(res);
         if (res.status >= 200 && res.status <= 299) {
-          data = await res.json();
-          await AsyncStorage.setItem("token", data.data);
-          console.log(data);
-          navigation.navigate("Layout");
-        } else if (res.status == 400) {
+          alert(
+            "Request Submitted Successfully. Your application is under review by the admin. आपका खाता व्यवस्थापक द्वारा समीक्षाधीन है. कृपया अपने व्यवस्थापक से संपर्क करें. તમારું એકાઉન્ટ એડમિન દ્વારા સમીક્ષા હેઠળ છે. કૃપા કરીને તમારા એડમિનનો સંપર્ક કરો."
+          );
+          navigation.navigate("Loader");
+        } else if (res.status === 401) {
           setStatus({
-            title: "Error",
-            text: "This account does not exist. Please sign up.",
+            title: phoneNumber,
+            text: "This phone number is already registered. Please log in or try another phone number.",
           });
           setCta({
-            title: "Sign Up",
-            onPress: () => navigation.navigate("Register"),
+            title: "Log In",
+            onPress: () => navigation.navigate("Login"),
           });
-        } else if (res.status == 409) {
+        } else if (res.status === 403) {
           setStatus({
-            title: "Error",
-            text: "Your profile has been rejected. Please contact your admin.",
-          });
-          setCta({
-            title: "Sign Up",
-            onPress: () => navigation.navigate("Register"),
-          });
-        } else if (res.status == 403) {
-          setStatus({
-            title: "Incorrect OTP",
+            title: phoneNumber,
             text: "The OTP you entered is incorrect. Please enter the correct OTP received on your phone.",
-          });
-          setOtp(Array(6).fill(""));
-        } else if (res.status == 401) {
-          setStatus({
-            title: "Error",
-            text: "Your Account is under review by the Admin. Please contact your Admin.",
-          });
-          setCta({
-            title: "Get Started",
-            onPress: () => navigation.navigate("Starter"),
           });
         } else {
           setStatus({
@@ -86,12 +82,12 @@ export const OtpScreen = ({ route }) => {
         }
       })
       .catch((err) => {
-        console.log(err);
         setStatus({
           title: "Error",
           text: "Something went wrong. Please contact your Admin.",
         });
       });
+    setLoading(false);
   };
 
   const handleResend = () => {
@@ -105,6 +101,12 @@ export const OtpScreen = ({ route }) => {
   return (
     <Container>
       <Popup status={status} setStatus={setStatus} cta={cta} />
+      <TouchableOpacity
+        style={{ paddingLeft: 20, paddingTop: 20, width: "100%" }}
+        onPress={() => navigation.navigate("Register")}
+      >
+        <PrimaryText children={"< Back"} textAlign={"left"} fontSize={20} />
+      </TouchableOpacity>
       <BoldText children={"Verification"} fontSize={30} />
       <PrimaryText
         children={"Please enter the OTP received on your phone"}

@@ -23,7 +23,7 @@ export const Login = () => {
     setCta(null);
     await sendOtp(phoneNumber)
       .then((res) => {
-        console.log(res);
+        console.log(res.status);
         if (res.status === 200) {
           navigation.navigate("OtpScreen", { phoneNumber });
         } else if (res.status == 400) {
@@ -40,13 +40,7 @@ export const Login = () => {
             title: "Error",
             text: "Your Account is under review by the Admin. Please contact your Admin.",
           });
-        } else if (res.status == 409) {
-          setStatus({
-            title: "Error",
-            text: "Your Profile has been Rejected. Please check the details and re-submit the form.",
-          });
-        } 
-        else {
+        } else {
           setStatus({
             title: "Error",
             text: "Something went wrong. Please contact your Admin.",
@@ -62,7 +56,7 @@ export const Login = () => {
 
     setLoading(false);
   };
-  if (loading) return <Loadingscreen text="Signing In..." />;
+  if (loading) return <Loadingscreen />;
   return (
     <Container>
       <Popup status={status} setStatus={setStatus} cta={cta} />
