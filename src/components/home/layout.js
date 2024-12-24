@@ -53,7 +53,6 @@ export const Layout = () => {
 
   const fetchData = async () => {
     const token = await AsyncStorage.getItem("token");
-    console.log("Fetch data in layout ----");
     console.log(token);
     if (!token || token == "null") {
       console.log("token not found");

@@ -28,7 +28,7 @@ export const NokRegistration = () => {
   const [lastName, setLastName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [serviceNumber, setServiceNumber] = useState("");
-  const [headuaters, setHeadquaters] = useState("");
+  const [headquaters, setHeadquaters] = useState("");
   const [rank, setRank] = useState("");
   const [dob, setDOB] = useState("");
   const [enrollmentDate, setEnrollmentDate] = useState("");
@@ -91,7 +91,6 @@ export const NokRegistration = () => {
   };
 
   const handleSubmit = async () => {
-    console.log(dob);
     setLoading(true);
 
     if (!firstName || !lastName || !mobileNumber || !serviceNumber || !rank) {
@@ -108,10 +107,10 @@ export const NokRegistration = () => {
         lastName: lastName,
         mobileNumber: mobileNumber,
         serviceNumber: serviceNumber,
-        headuaters: headuaters,
+        headquarters: headquaters,
         rank: rank,
         dateOfBirth: dob,
-        dateOfEnrollment: enrollmentDate,
+        dateOfEnrollment : enrollmentDate,
         dateOfDeath: dateOfDeath,
         isGalantry: gallantaryAwards,
         isPension: pension,
@@ -124,16 +123,16 @@ export const NokRegistration = () => {
         relationShip: relationShipStatus,
         adharCardNumber: aadharCardNumber,
         panCard: panCard,
-        pensionUID: pensionUID,
-        Domicile,
+        pensionUid: pensionUID,
+        domicile : Domicile,
         address,
         city,
         state,
         pinCode,
-        PostofficeCode,
+        postOfficeCode : PostofficeCode,
       })
         .then((res) => {
-          if (res.status >= 200 && res.status <= 299) {
+          if (res.ok) {
             alert(
               "Request Submitted Successfully. Your application is under review by the admin. आपका खाता व्यवस्थापक द्वारा समीक्षाधीन है. कृपया अपने व्यवस्थापक से संपर्क करें. તમારું એકાઉન્ટ એડમિન દ્વારા સમીક્ષા હેઠળ છે. કૃપા કરીને તમારા એડમિનનો સંપર્ક કરો."
             );
@@ -267,7 +266,7 @@ export const NokRegistration = () => {
           <TextField
             label={"Headquarter"}
             placeholder={"Enter Headquater"}
-            value={headuaters}
+            value={headquaters}
             onChangeText={(e) => setHeadquaters(e.toString())}
           />
           <TextField

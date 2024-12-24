@@ -46,9 +46,9 @@ export const EchsRegistration = () => {
 
   const [serviceType, setserviceType] = useState("");
   const serviceOptions = [
-    { label: "Army", value: "army" },
-    { label: "Married", value: "navy" },
-    { label: "Air Force", value: "airForce" },
+    { label: "Army", value: "Army" },
+    { label: "Navy", value: "Navy" },
+    { label: "Air Force", value: "Air Force" },
   ];
 
   const [category, setcategory] = useState("");
@@ -135,7 +135,7 @@ export const EchsRegistration = () => {
       })
         .then((res) => {
           console.log(res);
-          if (res.status >= 200 && res.status <= 299) {
+          if (res.ok) {
             alert(
               "Request Submitted Successfully. Your application is under review by the admin. आपका खाता व्यवस्थापक द्वारा समीक्षाधीन है. कृपया अपने व्यवस्थापक से संपर्क करें. તમારું એકાઉન્ટ એડમિન દ્વારા સમીક્ષા હેઠળ છે. કૃપા કરીને તમારા એડમિનનો સંપર્ક કરો."
             );
@@ -148,8 +148,6 @@ export const EchsRegistration = () => {
           }
           return res;
         })
-        .then((res) => res.json())
-        .then((res) => console.log(res))
         .catch((err) => {
           console.log(err);
           setStatus({
@@ -181,7 +179,7 @@ export const EchsRegistration = () => {
         setLastName(data.user.last_name ?? "");
         setServiceNumber(data.service_no ?? "");
         setaccountNumber(data.account_no ?? "");
-        setaadharCardNumber(data.aadhar_card_no ?? "");
+        setaadharCardNumber(data.user.aadhaar ?? "");
         setpanCard(data.pan_card_no ?? "");
         setcity(data.city ?? "");
         setstate(data.state ?? "");

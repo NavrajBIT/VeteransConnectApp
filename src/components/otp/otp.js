@@ -40,7 +40,7 @@ export const OtpScreen = ({ route }) => {
     await login(phoneNumber, otpCode)
       .then(async (res) => {
         console.log(res.status);
-        if (res.status >= 200 && res.status <= 299) {
+        if (res.ok) {
           data = await res.json();
           await AsyncStorage.setItem("token", data.data);
           console.log(data);

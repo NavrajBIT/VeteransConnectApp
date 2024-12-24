@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import DatePickerField from "../../subcomponents/date_picker_field";
 import DropdownField from "../../subcomponents/dropdown/dropdown";
 import { TextField } from "../../subcomponents/textfield";
-
+import { editProfile } from "../../api/edit_profile";
 import { Dimensions, TouchableOpacity } from "react-native";
 import { PrimaryButton } from "../../subcomponents/button";
 import Loadingscreen from "../../subcomponents/loadingscreen/loadingscreen";
@@ -24,7 +24,7 @@ export const EditProfile = ({ route }) => {
   const [altMobileNumber, setAltMobileNumber] = useState("");
   const [email, setEmail] = useState("");
   const [serviceNumber, setServiceNumber] = useState("");
-  const [headuaters, setHeadquaters] = useState("");
+  const [headquaters, setHeadquaters] = useState("");
   const [rank, setRank] = useState("");
   const [dob, setDOB] = useState("");
   const [enrollmentDate, setEnrollmentDate] = useState("");
@@ -89,7 +89,74 @@ export const EditProfile = ({ route }) => {
   };
 
   const handleSubmit = async () => {
-    alert("Submit");
+    setLoading(true);
+
+    
+        if (!firstName || !lastName || !mobileNumber || !serviceNumber || !rank) {
+          setLoading(false);
+          setStatus({ title: "Error", text: "Please fill all * marked fields." });
+        } else {
+          await editProfile({
+            isUpdate: true,
+            aadharCardFront: aadharFrontImage,
+            addharCardBack: aadharBackImage,
+            panCardImage: panImage,
+            addressProof: addressImage,
+            firstName: firstName,
+            lastName: lastName,
+            email,
+            mobileNumber: mobileNumber,
+            serviceNumber: serviceNumber,
+            headquarters: headquaters,
+            rank: rank,
+            dateOfBirth: dob,
+            dateOfEnrollment : enrollmentDate,
+            dateOfDeath: dateOfDeath,
+            isGalantry: gallantaryAwards,
+            isPension: pension,
+            ppoNo: ppoNUmber,
+            bankName: bankName,
+            accountNumber: accountNumber,
+            echsCardNo: echsNumber,
+            nokName: nameOfNok,
+            dateOfNok: dateOfNOK,
+            relationShip: relationShipStatus,
+            adharCardNumber: aadharCardNumber,
+            panCard: panCard,
+            pensionUid: pensionUID,
+            domicile : Domicile,
+            address,
+            city,
+            state,
+            pinCode,
+            postOfficeCode : PostofficeCode,
+          })
+            .then((res) => {
+              console.log("respone", res)
+              if (res.ok) {
+                alert(
+                  "Request Submitted Successfully. Your application is under review by the admin. आपका खाता व्यवस्थापक द्वारा समीक्षाधीन है. कृपया अपने व्यवस्थापक से संपर्क करें. તમારું એકાઉન્ટ એડમિન દ્વારા સમીક્ષા હેઠળ છે. કૃપા કરીને તમારા એડમિનનો સંપર્ક કરો."
+                );
+                navigation.navigate("Layout");
+              } else {
+                setStatus({
+                  title: "Error",
+                  text: "Something went wrong. Please contact your Admin.",
+                });
+              }
+              return res;
+            })
+            .catch((err) => {
+              console.log(err);
+              setStatus({
+                title: "Error",
+                text: "Something went wrong. Please contact your Admin.",
+              });
+            });
+    
+          setLoading(false);
+        }
+
   };
 
   const poppulateUserData = async () => {
@@ -207,7 +274,7 @@ export const EditProfile = ({ route }) => {
           <TextField
             label={"Headquarter"}
             placeholder={"Enter Headquater"}
-            value={headuaters}
+            value={headquaters}
             onChangeText={(e) => setHeadquaters(e.toString())}
           />
           <TextField

@@ -29,10 +29,9 @@ export const VeteransRegistration = () => {
   const [lastName, setLastName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [serviceNumber, setServiceNumber] = useState("");
-  const [headuaters, setHeadquaters] = useState("");
+  const [headquaters, setHeadquaters] = useState("");
   const [rank, setRank] = useState("");
   const [dob, setDOB] = useState("");
-  //   const [enrollmentDate, setEnrollmentDate] = useState('')
   const [dateOfDeath, setdateOfDeath] = useState("");
   const [ppoNUmber, setppoNUmber] = useState("");
   const [bankName, setbankName] = useState("");
@@ -47,7 +46,7 @@ export const VeteransRegistration = () => {
   const [city, setcity] = useState("");
   const [state, setstate] = useState("");
   const [pinCode, setpinCode] = useState("");
-  const [PostofficeCode, setPostofficeCode] = useState("");
+  const [postofficeCode, setPostofficeCode] = useState("");
   const [Domicile, setDomicile] = useState("");
 
   const [relationShipStatus, setrelationShipStatus] = useState("");
@@ -92,6 +91,7 @@ export const VeteransRegistration = () => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     if (
       !firstName ||
       !lastName ||
@@ -100,7 +100,7 @@ export const VeteransRegistration = () => {
       !rank ||
       !aadharCardNumber ||
       !panCard
-    ) {
+) {
       setLoading(false);
       setStatus({
         title: "Error",
@@ -117,7 +117,7 @@ export const VeteransRegistration = () => {
         lastName: lastName,
         mobileNumber: mobileNumber,
         serviceNumber: serviceNumber,
-        headuaters: headuaters,
+        headquarters: headquaters,
         rank: rank,
         dateOfBirth: dob,
         dateOfDeath: dateOfDeath,
@@ -132,17 +132,16 @@ export const VeteransRegistration = () => {
         relationShip: relationShipStatus,
         adharCardNumber: aadharCardNumber,
         panCard: panCard,
-        pensionUID: pensionUID,
-        Domicile,
+        pensionUid: pensionUID,
+        domicile : Domicile,
         address,
         city,
         state,
         pinCode,
-        PostofficeCode,
+        postOfficeCode : postofficeCode,
       })
         .then((res) => {
-          console.log(res);
-          if (res.status >= 200 && res.status <= 299) {
+          if (res.ok) {
             alert(
               "Request Submitted Successfully. Your application is under review by the admin. आपका खाता व्यवस्थापक द्वारा समीक्षाधीन है. कृपया अपने व्यवस्थापक से संपर्क करें. તમારું એકાઉન્ટ એડમિન દ્વારા સમીક્ષા હેઠળ છે. કૃપા કરીને તમારા એડમિનનો સંપર્ક કરો."
             );
@@ -282,7 +281,7 @@ export const VeteransRegistration = () => {
           <TextField
             label={"Headquarter"}
             placeholder={"Enter Headquater"}
-            value={headuaters}
+            value={headquaters}
             onChangeText={(e) => setHeadquaters(e.toString())}
           />
           <TextField
@@ -424,7 +423,7 @@ export const VeteransRegistration = () => {
           <TextField
             label={"Post Office Code"}
             placeholder={"Enter Post Office Code"}
-            value={PostofficeCode}
+            value={postofficeCode}
             onChangeText={(e) => setPostofficeCode(e.toString())}
           />
           <View

@@ -29,10 +29,18 @@ export const registerUserECHS = async ({
   const formData = new FormData();
 
   if (echsCardFront) {
-    formData.append("echs_card_front", echsCardFront);
+    formData.append("echs_card_front", {
+      uri: echsCardFront,
+      name: "echs_front.jpg",
+      type: "image/jpeg", // or "image/png" depending on your image type
+    });
   }
   if (echsCardBack) {
-    formData.append("echs_card_back", echsCardBack);
+    formData.append("echs_card_back", {
+      uri: echsCardBack,
+      name: "echs_back.jpg",
+      type: "image/jpeg",
+    });
   }
 
   formData.append("first_name", firstName);
@@ -54,6 +62,8 @@ export const registerUserECHS = async ({
   formData.append("city", city);
   formData.append("state", state);
   formData.append("pincode", pinCode);
+
+  console.log(formData);
 
   const token = await AsyncStorage.getItem("token");
 

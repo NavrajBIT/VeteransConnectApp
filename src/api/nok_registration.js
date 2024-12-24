@@ -59,8 +59,7 @@ export const registerUserNOK = async ({
   formData.append("headquarters", headquarters || "");
   formData.append("rank", rank);
   formData.append("dob", dateOfBirth || "");
-  formData.append("date_of_enrollment", "");
-  // formData.append('date_of_enrollment', dateOfEnrollment || '')
+  formData.append('date_of_enrollment', dateOfEnrollment || '')
   formData.append("date_of_death", dateOfDeath);
   formData.append("gallantry_awards", isGalantry.toString());
   formData.append("pension_status", isPension.toString());
@@ -70,8 +69,7 @@ export const registerUserNOK = async ({
   formData.append("account_no", accountNumber || "");
   formData.append("echs_card_no", echsCardNo || "");
   formData.append("name_of_nok", nokName || "");
-  formData.append("dob_of_nok", "");
-  // formData.append('dob_of_nok', dateOfNok || '')
+  formData.append('dob_of_nok', dateOfNok || '')
   formData.append("relationship", relationShip || "");
   formData.append("aadhar_card_no", adharCardNumber);
   formData.append("pan_card_no", panCard);
@@ -88,7 +86,7 @@ export const registerUserNOK = async ({
   console.log(formData);
 
   return await fetch(nokRegistrationURL, {
-    method: isUpdate ? "PATCH" : "POST",
+    method: "POST",
     body: formData,
     headers: {
       Authorization: `Token ${token}`,
