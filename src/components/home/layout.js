@@ -53,7 +53,7 @@ export const Layout = () => {
 
   const fetchData = async () => {
     const token = await AsyncStorage.getItem("token");
-    console.log(token);
+
     if (!token || token == "null") {
       console.log("token not found");
       return;
@@ -100,6 +100,7 @@ export const Layout = () => {
       .then(async (res) => {
         if (res.ok) {
           const data = await res.json();
+          console.log(data);
           setUserDetails(data);
         } else if (res.status == 401) {
           await AsyncStorage.clear();
@@ -120,10 +121,7 @@ export const Layout = () => {
     return () => clearInterval(myInterval);
   }, []);
   useEffect(() => {
-    console.log("--------------");
-    console.log(th);
     if (!isNaN(th)) {
-      console.log(`setting text height: ${th}`);
       setTextheight(th);
     }
   }, [th]);

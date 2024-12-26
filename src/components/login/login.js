@@ -21,11 +21,13 @@ export const Login = () => {
   const handleLogin = async () => {
     setLoading(true);
     setCta(null);
-    await sendOtp(phoneNumber)
+    await sendOtp(`+91${phoneNumber}`)
       .then((res) => {
         console.log(res.status);
         if (res.status === 200) {
-          navigation.navigate("OtpScreen", { phoneNumber });
+          navigation.navigate("OtpScreen", {
+            phoneNumber: `+91${phoneNumber}`,
+          });
         } else if (res.status == 400) {
           setStatus({
             title: "Error",

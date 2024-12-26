@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getUserDetailsURL } from "../constants/api_constants";
+import { correctDateFormat, appendImageToFormdata } from "./tools";
 
 export const editProfile = async ({
   isUpdate,
@@ -36,22 +37,19 @@ export const editProfile = async ({
   pinCode,
   postOfficeCode,
 }) => {
+  let formData = new FormData();
 
+  formData = appendImageToFormdata(
+    aadharCardFront,
+    "addharcard_front",
+    formData
+  );
 
-  const formData = new FormData();
+  formData = appendImageToFormdata(aadharCardBack, "aadharcard_back", formData);
 
-  if (aadharCardFront) {
-    formData.append("addharcard_front", aadharCardFront);
-  }
-  if (aadharCardBack) {
-    formData.append("aadharcard_back", aadharCardBack);
-  }
-  if (panCardImage) {
-    formData.append("pan_card_doc", panCardImage);
-  }
-  if (addressProof) {
-    formData.append("address_proof", addressProof);
-  }
+  formData = appendImageToFormdata(panCardImage, "pan_card_doc", formData);
+
+  formData = appendImageToFormdata(addressProof, "address_proof", formData);
 
   formData.append("first_name", firstName);
   formData.append("last_name", lastName);
@@ -60,9 +58,12 @@ export const editProfile = async ({
   formData.append("service_no", serviceNumber);
   formData.append("headquarters", headquarters || "");
   formData.append("rank", rank);
-  formData.append("dob", dateOfBirth || "");
-  formData.append('date_of_enrollment', dateOfEnrollment || '')
-  formData.append("date_of_death", dateOfDeath);
+  formData.append("dob", correctDateFormat(dateOfBirth) || "");
+  formData.append(
+    "date_of_enrollment",
+    correctDateFormat(dateOfEnrollment) || ""
+  );
+  formData.append("date_of_death", correctDateFormat(dateOfDeath));
   formData.append("gallantry_awards", isGalantry.toString());
   formData.append("pension_status", isPension.toString());
   formData.append("pension_details", "");
@@ -71,7 +72,7 @@ export const editProfile = async ({
   formData.append("account_no", accountNumber || "");
   formData.append("echs_card_no", echsCardNo || "");
   formData.append("name_of_nok", nokName || "");
-  formData.append('dob_of_nok', dateOfNok || '')
+  formData.append("dob_of_nok", correctDateFormat(dateOfNok) || "");
   formData.append("relationship", relationShip || "");
   formData.append("aadhar_card_no", adharCardNumber);
   formData.append("pan_card_no", panCard);
@@ -84,8 +85,6 @@ export const editProfile = async ({
   formData.append("post_office_code", postOfficeCode);
 
   const token = await AsyncStorage.getItem("token");
-
-  console.log(formData);
 
   return await fetch(getUserDetailsURL, {
     method: "POST",

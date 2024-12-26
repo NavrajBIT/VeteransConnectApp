@@ -8,7 +8,7 @@ export const login = async (mobile, otp) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      phone: `+91${mobile}`,
+      phone: mobile,
       otp: otp,
     }),
   });

@@ -65,7 +65,6 @@ export const Register = () => {
       } else {
         await sendOtp(phoneNumber)
           .then((res) => {
-            console.log(res);
             if (res.ok) {
               navigation.navigate("OtpScreenSignup", {
                 echsCardNo,
@@ -98,7 +97,7 @@ export const Register = () => {
     }
   };
 
-  if (loading) return <Loadingscreen text="Signing Up..." />;
+  if (loading) return <Loadingscreen />;
 
   return (
     <Container>

@@ -91,72 +91,68 @@ export const EditProfile = ({ route }) => {
   const handleSubmit = async () => {
     setLoading(true);
 
-    
-        if (!firstName || !lastName || !mobileNumber || !serviceNumber || !rank) {
-          setLoading(false);
-          setStatus({ title: "Error", text: "Please fill all * marked fields." });
-        } else {
-          await editProfile({
-            isUpdate: true,
-            aadharCardFront: aadharFrontImage,
-            addharCardBack: aadharBackImage,
-            panCardImage: panImage,
-            addressProof: addressImage,
-            firstName: firstName,
-            lastName: lastName,
-            email,
-            mobileNumber: mobileNumber,
-            serviceNumber: serviceNumber,
-            headquarters: headquaters,
-            rank: rank,
-            dateOfBirth: dob,
-            dateOfEnrollment : enrollmentDate,
-            dateOfDeath: dateOfDeath,
-            isGalantry: gallantaryAwards,
-            isPension: pension,
-            ppoNo: ppoNUmber,
-            bankName: bankName,
-            accountNumber: accountNumber,
-            echsCardNo: echsNumber,
-            nokName: nameOfNok,
-            dateOfNok: dateOfNOK,
-            relationShip: relationShipStatus,
-            adharCardNumber: aadharCardNumber,
-            panCard: panCard,
-            pensionUid: pensionUID,
-            domicile : Domicile,
-            address,
-            city,
-            state,
-            pinCode,
-            postOfficeCode : PostofficeCode,
-          })
-            .then((res) => {
-              console.log("respone", res)
-              if (res.ok) {
-                alert(
-                  "Request Submitted Successfully. Your application is under review by the admin. आपका खाता व्यवस्थापक द्वारा समीक्षाधीन है. कृपया अपने व्यवस्थापक से संपर्क करें. તમારું એકાઉન્ટ એડમિન દ્વારા સમીક્ષા હેઠળ છે. કૃપા કરીને તમારા એડમિનનો સંપર્ક કરો."
-                );
-                navigation.navigate("Layout");
-              } else {
-                setStatus({
-                  title: "Error",
-                  text: "Something went wrong. Please contact your Admin.",
-                });
-              }
-              return res;
-            })
-            .catch((err) => {
-              console.log(err);
-              setStatus({
-                title: "Error",
-                text: "Something went wrong. Please contact your Admin.",
-              });
+    if (!firstName || !lastName || !mobileNumber || !serviceNumber || !rank) {
+      setLoading(false);
+      setStatus({ title: "Error", text: "Please fill all * marked fields." });
+    } else {
+      await editProfile({
+        isUpdate: true,
+        aadharCardFront: aadharFrontImage,
+        addharCardBack: aadharBackImage,
+        panCardImage: panImage,
+        addressProof: addressImage,
+        firstName: firstName,
+        lastName: lastName,
+        email,
+        mobileNumber: mobileNumber,
+        serviceNumber: serviceNumber,
+        headquarters: headquaters,
+        rank: rank,
+        dateOfBirth: dob,
+        dateOfEnrollment: enrollmentDate,
+        dateOfDeath: dateOfDeath,
+        isGalantry: gallantaryAwards,
+        isPension: pension,
+        ppoNo: ppoNUmber,
+        bankName: bankName,
+        accountNumber: accountNumber,
+        echsCardNo: echsNumber,
+        nokName: nameOfNok,
+        dateOfNok: dateOfNOK,
+        relationShip: relationShipStatus,
+        adharCardNumber: aadharCardNumber,
+        panCard: panCard,
+        pensionUid: pensionUID,
+        domicile: Domicile,
+        address,
+        city,
+        state,
+        pinCode,
+        postOfficeCode: PostofficeCode,
+      })
+        .then((res) => {
+          if (res.ok) {
+            navigation.navigate("Layout");
+          } else {
+            setStatus({
+              title: "Error",
+              text: "Something went wrong. Please contact your Admin.",
             });
-    
-          setLoading(false);
-        }
+          }
+          return res;
+        })
+        .catch((err) => {
+          console.log("err in edit profile...", err);
 
+          // setStatus({
+          //   title: "Error",
+          //   text: "Something went wrong. Please contact your Admin.",
+          // });
+        });
+      navigation.navigate("Layout");
+
+      setLoading(false);
+    }
   };
 
   const poppulateUserData = async () => {
@@ -172,6 +168,7 @@ export const EditProfile = ({ route }) => {
       .then((res) => res.json())
       .then((res) => {
         const data = res.data;
+        console.log(data);
 
         setAltMobileNumber(data.alternate_contact_no ?? "");
         setEmail(data.user.email ?? "");
@@ -237,24 +234,29 @@ export const EditProfile = ({ route }) => {
         <View style={{ paddingTop: 20 }}>
           <TextField
             label={"First Name"}
+            required
             placeholder={"Enter First Name"}
             value={firstName}
             onChangeText={(e) => setFirstName(e.toString())}
           />
           <TextField
             label={"Last Name"}
+            required
             placeholder={"Enter Last Name"}
             value={lastName}
             onChangeText={(e) => setLastName(e.toString())}
           />
           <TextField
             label={"Mobile Number"}
+            required
+            keyboardType="numeric"
             placeholder={"Enter Mobile Number"}
             value={mobileNumber}
             onChangeText={(e) => setMobileNumber(e.toString())}
           />
           <TextField
             label={"Alternate Contact Number"}
+            keyboardType="numeric"
             placeholder={"Enter Alternate Contact Number"}
             value={altMobileNumber}
             onChangeText={(e) => setAltMobileNumber(e.toString())}
@@ -267,6 +269,7 @@ export const EditProfile = ({ route }) => {
           />
           <TextField
             label={"Service Number"}
+            required
             placeholder={"Enter Service Number"}
             value={serviceNumber}
             onChangeText={(e) => setServiceNumber(e.toString())}
@@ -279,6 +282,7 @@ export const EditProfile = ({ route }) => {
           />
           <TextField
             label={"Rank"}
+            required
             placeholder={"Enter Rank"}
             value={rank}
             onChangeText={(e) => setRank(e.toString())}

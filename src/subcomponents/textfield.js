@@ -66,6 +66,7 @@ export const TextField = ({
             flex: 1,
             fontSize: 16,
             color: "#000000",
+            height: restProps.multiline ? "300" : "auto",
           }}
           onFocus={handleFocus}
           onBlur={handleBlur}

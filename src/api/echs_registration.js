@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { echsRegistrationURL } from "../constants/api_constants";
+import { appendImageToFormdata } from "./tools";
 
 export const registerUserECHS = async ({
   isUpdate,
@@ -26,22 +27,11 @@ export const registerUserECHS = async ({
   state,
   pinCode,
 }) => {
-  const formData = new FormData();
+  let formData = new FormData();
 
-  if (echsCardFront) {
-    formData.append("echs_card_front", {
-      uri: echsCardFront,
-      name: "echs_front.jpg",
-      type: "image/jpeg", // or "image/png" depending on your image type
-    });
-  }
-  if (echsCardBack) {
-    formData.append("echs_card_back", {
-      uri: echsCardBack,
-      name: "echs_back.jpg",
-      type: "image/jpeg",
-    });
-  }
+  formData = appendImageToFormdata(echsCardFront, "echs_card_front", formData);
+
+  formData = appendImageToFormdata(echsCardBack, "echs_card_back", formData);
 
   formData.append("first_name", firstName);
   formData.append("middle_name", middleName || "");

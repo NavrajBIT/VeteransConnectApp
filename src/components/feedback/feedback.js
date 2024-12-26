@@ -1,5 +1,5 @@
-import * as ImagePicker from 'expo-image-picker'
-import React, { useEffect, useState } from 'react'
+import * as ImagePicker from "expo-image-picker";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -8,49 +8,63 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { fetchFeedbackById, respond } from '../../api/feedback'
-import { BoldText } from '../../subcomponents/text'
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { fetchFeedbackById, respond } from "../../api/feedback";
+import { BoldText, PrimaryText } from "../../subcomponents/text";
+import Loadingscreen from "../../subcomponents/loadingscreen/loadingscreen";
+import Popup from "../../subcomponents/popup";
+import { useNavigation } from "@react-navigation/native";
 
 export const Feedback = ({ route }) => {
-  const { id } = route.params
-  const [feedback, setFeedback] = useState(null)
-  const [replyText, setReplyText] = useState('')
-  const [selectedImage, setSelectedImage] = useState(null)
+  const navigation = useNavigation();
+  const { id } = route.params;
+  const [feedback, setFeedback] = useState(null);
+  const [replyText, setReplyText] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(null);
 
+  const fetchAndSetFeedbackByID = async () => {
+    setLoading(true);
+
+    await fetchFeedbackById({ id })
+      .then(async (res) => {
+        if (res.ok) {
+          const data = await res.json();
+          setFeedback(data);
+        } else {
+          navigation.navigate("Layout");
+        }
+      })
+      .catch((err) => {
+        navigation.navigate("Layout");
+      });
+
+    setLoading(false);
+  };
   useEffect(() => {
-    const fetchAndSetFeedbackByID = async () => {
-      try {
-        const response = await fetchFeedbackById({ id })
-        setFeedback(response)
-        // console.log('Fetched feedback:', response)
-      } catch (error) {
-        console.error('Error fetching feedback:', error)
-      }
-    }
-
-    fetchAndSetFeedbackByID()
-  }, [])
+    fetchAndSetFeedbackByID();
+  }, []);
 
   const handleSend = () => {
     if (replyText.trim() || selectedImage) {
-      console.log('Reply sent:', replyText, selectedImage)
-      sendFeedback()
-      setReplyText('')
-      setSelectedImage(null)
+      console.log("Reply sent:", replyText, selectedImage);
+      sendFeedback();
+      setReplyText("");
+      setSelectedImage(null);
     } else {
-      console.log('Cannot send an empty reply.')
+      console.log("Cannot send an empty reply.");
     }
-  }
+  };
 
   const handleImageUpload = async () => {
     const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync()
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert('Permission to access the media library is required!')
-      return
+      alert("Permission to access the media library is required!");
+      return;
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -58,43 +72,46 @@ export const Feedback = ({ route }) => {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-    })
+    });
 
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri)
-      console.log('Image selected:', result.assets[0].uri)
+      setSelectedImage(result.assets[0].uri);
+      console.log("Image selected:", result.assets[0].uri);
     }
-  }
+  };
 
   const sendFeedback = async () => {
     await respond({
       id: id,
       message: replyText,
       imagePath: selectedImage,
-      filePath: '',
-    }).then((response) => {
-      console.log('Response from server:', response)
+      filePath: "",
     })
-  }
+      .then((response) => {
+        fetchAndSetFeedbackByID();
+      })
+      .catch((err) => console.log(err));
+  };
 
-  if (!feedback) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Text>Loading...</Text>
-      </SafeAreaView>
-    )
-  }
+  if (loading || !feedback) return <Loadingscreen />;
 
   return (
     <SafeAreaView style={styles.container}>
+      <Popup status={status} setStatus={setStatus} />
+      <TouchableOpacity
+        style={{ paddingLeft: 20 }}
+        onPress={() => navigation.navigate("ViewFeedback")}
+      >
+        <PrimaryText children={"<"} textAlign={"left"} fontSize={60} />
+      </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <BoldText children='Feedback' fontSize={20} textAlign='left' />
+        <BoldText children="Feedback" fontSize={20} textAlign="left" />
         <View style={{ paddingTop: 30 }}></View>
         <View style={styles.card}>
           <Text style={styles.title}>Query: {feedback.name}</Text>
           <Text style={styles.message}>Message: {feedback.message}</Text>
           <Text style={styles.status}>
-            Status:{' '}
+            Status:{" "}
             <Text style={styles[feedback.status.toLowerCase()]}>
               {feedback.status}
             </Text>
@@ -113,7 +130,7 @@ export const Feedback = ({ route }) => {
                 response.is_admin ? styles.admin : styles.user,
               ]}
             >
-              {response.is_admin ? 'Admin' : 'User'}:
+              {response.is_admin ? "Admin" : "User"}:
             </Text>
             {response.message ? (
               <Text style={styles.responseText}>{response.message}</Text>
@@ -141,7 +158,7 @@ export const Feedback = ({ route }) => {
           </TouchableOpacity>
           <TextInput
             style={styles.replyInput}
-            placeholder='Reply...'
+            placeholder="Reply..."
             value={replyText}
             onChangeText={setReplyText}
           />
@@ -157,24 +174,24 @@ export const Feedback = ({ route }) => {
         )}
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: "#F9F9F9",
   },
   scrollContainer: {
     paddingHorizontal: 20,
     paddingVertical: 30,
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
@@ -182,7 +199,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   message: {
     fontSize: 14,
@@ -192,45 +209,45 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   pending: {
-    color: 'red',
+    color: "red",
   },
   date: {
     fontSize: 12,
-    color: 'gray',
+    color: "gray",
     marginTop: 5,
   },
   responseContainer: {
     marginBottom: 15,
   },
   responseLabel: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 14,
   },
   admin: {
-    color: 'blue',
+    color: "blue",
   },
   user: {
-    color: 'green',
+    color: "green",
   },
   responseText: {
     fontSize: 14,
     marginVertical: 5,
   },
   responseImage: {
-    width: '100%',
+    width: "100%",
     height: 200,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     marginVertical: 5,
   },
   replyContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 15,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 20,
     paddingHorizontal: 10,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
   },
   replyInput: {
     flex: 1,
@@ -243,20 +260,20 @@ const styles = StyleSheet.create({
   },
   sendButtonText: {
     fontSize: 18,
-    color: '#007AFF',
+    color: "#007AFF",
   },
   uploadButton: {
     paddingHorizontal: 10,
   },
   uploadButtonText: {
     fontSize: 18,
-    color: '#007AFF',
+    color: "#007AFF",
   },
   selectedImagePreview: {
     marginTop: 10,
-    width: '100%',
+    width: "100%",
     height: 200,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     borderRadius: 10,
   },
-})
+});

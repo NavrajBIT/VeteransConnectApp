@@ -45,7 +45,7 @@ export const OtpScreen = ({ route }) => {
           await AsyncStorage.setItem("token", data.data);
           console.log(data);
           navigation.navigate("Layout");
-        } else if (res.status == 400) {
+        } else if (res.status == 404) {
           setStatus({
             title: "Error",
             text: "This account does not exist. Please sign up.",

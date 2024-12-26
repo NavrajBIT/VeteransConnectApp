@@ -49,7 +49,11 @@ export default function App() {
         <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen name="ViewFeedback" component={ViewFeedback} />
         <Stack.Screen name="SendFeedback" component={SendFeedback} />
-        <Stack.Screen name="Feedback" component={Feedback} />
+        <Stack.Screen
+          name="Feedback"
+          component={Feedback}
+          options={{ animation: "none" }}
+        />
         <Stack.Screen
           name="VeteransRegistration"
           component={VeteransRegistration}

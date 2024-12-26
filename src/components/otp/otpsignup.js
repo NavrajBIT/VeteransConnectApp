@@ -16,8 +16,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { register } from "../../api/register";
 
 export const OtpScreenSignup = ({ route }) => {
-  console.log("-------------------------");
-  console.log(route.params);
   const { phoneNumber } = route.params ?? "";
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [isResendDisabled, setIsResendDisabled] = useState(false);
@@ -82,6 +80,7 @@ export const OtpScreenSignup = ({ route }) => {
         }
       })
       .catch((err) => {
+        console.log(err);
         setStatus({
           title: "Error",
           text: "Something went wrong. Please contact your Admin.",

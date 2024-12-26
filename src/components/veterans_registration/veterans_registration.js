@@ -100,7 +100,7 @@ export const VeteransRegistration = () => {
       !rank ||
       !aadharCardNumber ||
       !panCard
-) {
+    ) {
       setLoading(false);
       setStatus({
         title: "Error",
@@ -133,12 +133,12 @@ export const VeteransRegistration = () => {
         adharCardNumber: aadharCardNumber,
         panCard: panCard,
         pensionUid: pensionUID,
-        domicile : Domicile,
+        domicile: Domicile,
         address,
         city,
         state,
         pinCode,
-        postOfficeCode : postofficeCode,
+        postOfficeCode: postofficeCode,
       })
         .then((res) => {
           if (res.ok) {
@@ -267,6 +267,7 @@ export const VeteransRegistration = () => {
           <TextField
             label={"Mobile Number"}
             required
+            keyboardType="numeric"
             placeholder={"Enter Mobile Number"}
             value={mobileNumber}
             onChangeText={(e) => setMobileNumber(e.toString())}

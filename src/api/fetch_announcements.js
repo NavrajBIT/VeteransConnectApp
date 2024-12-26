@@ -5,6 +5,8 @@ import { useNavigation } from "@react-navigation/native";
 export const fetchTrendingPosts = async () => {
   const token = await AsyncStorage.getItem("token");
 
+  console.log(token);
+
   return await fetch(highlightsURL, {
     method: "GET",
     headers: {

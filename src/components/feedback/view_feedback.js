@@ -1,55 +1,69 @@
-import { useNavigation } from '@react-navigation/native'
-import { useEffect, useState } from 'react'
+import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 import {
   Button,
   Dimensions,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
-} from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { fetchFeedback } from '../../api/feedback'
-import { PrimaryButton } from '../../subcomponents/button'
-import { BoldText, PrimaryText } from '../../subcomponents/text'
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { fetchFeedback } from "../../api/feedback";
+import { PrimaryButton } from "../../subcomponents/button";
+import { BoldText, PrimaryText } from "../../subcomponents/text";
 
 export const ViewFeedback = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
-  const [feedbacks, setFeedbacks] = useState({ results: [] })
+  const [feedbacks, setFeedbacks] = useState({ results: [] });
 
   useEffect(() => {
     const fetchAndSetFeedback = async () => {
       try {
-        const response = await fetchFeedback()
-        setFeedbacks(response)
-        console.log('Fetched feedbacks:', response)
+        const response = await fetchFeedback();
+        setFeedbacks(response);
+        console.log("Fetched feedbacks:", response);
       } catch (error) {
-        console.error('Error fetching feedback:', error)
+        console.error("Error fetching feedback:", error);
       }
-    }
+    };
 
-    fetchAndSetFeedback()
-  }, [])
+    fetchAndSetFeedback();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Layout")}
+        style={{ paddingLeft: 20 }}
+      >
+        <Text style={{ fontSize: 50, color: "green" }}>{"<"}</Text>
+      </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <BoldText children='Feedbacks' fontSize={20} textAlign='left' />
-        <View style={{ paddingTop: 30, paddingHorizontal: 30 }}>
+        <BoldText children="Feedback" fontSize={20} textAlign="left" />
+        <View
+          style={{
+            paddingTop: 30,
+          }}
+        >
           {feedbacks.results && feedbacks.results.length > 0 ? (
             feedbacks.results.map((feedback) => (
-              <View key={feedback.id} style={styles.feedbackRow}>
+              <TouchableOpacity
+                key={feedback.id}
+                style={styles.feedbackRow}
+                onPress={() => {
+                  const id = feedback.id;
+                  navigation.navigate("Feedback", { id });
+                }}
+              >
                 <Text style={{ fontSize: 18 }}>{feedback.name}</Text>
-                <Button
-                  title='View'
-                  onPress={() => {
-                    console.log(`Viewing feedback: ${feedback.id}`)
-                    const id = feedback.id
-                    navigation.navigate('Feedback', { id })
-                  }}
-                />
-              </View>
+                <Text style={{ fontSize: 12 }}>{feedback.status}</Text>
+                <Text style={{ fontSize: 10 }}>
+                  {new Date(feedback.created_at).toLocaleDateString()}
+                </Text>
+              </TouchableOpacity>
             ))
           ) : (
             <PrimaryText>No feedbacks available</PrimaryText>
@@ -58,38 +72,40 @@ export const ViewFeedback = () => {
       </ScrollView>
       <View
         style={{
-          width: Dimensions.get('window').width - 40,
+          width: Dimensions.get("window").width - 40,
           marginBottom: 20,
-          alignSelf: 'center',
+          alignSelf: "center",
         }}
       >
         <PrimaryButton
-          title={'Send Feedback'}
+          title={"Send Feedback"}
           onPress={() => {
-            navigation.navigate('SendFeedback')
+            navigation.navigate("SendFeedback");
           }}
         />
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: "#F9F9F9",
   },
   scrollContainer: {
     paddingHorizontal: 20,
     paddingVertical: 30,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
   },
   feedbackRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
+    justifyContent: "space-between",
+    width: "100%",
     marginVertical: 10,
+    borderWidth: 1,
+    borderColor: "black",
+    padding: "10",
+    borderRadius: 30,
+    backgroundColor: "rgba(200,200,200,0.2)",
   },
-})
+});

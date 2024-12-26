@@ -1,4 +1,5 @@
 import { registerURL } from "../constants/api_constants";
+import { appendImageToFormdata } from "./tools";
 
 export const register = async ({
   echsPrimaryCardImage,
@@ -12,8 +13,8 @@ export const register = async ({
   echsCardNo,
   otp,
 }) => {
-  const formData = new FormData();
-  formData.append("echs_primary_card_image", echsPrimaryCardImage);
+  let formData = new FormData();
+
   formData.append("first_name", firstName);
   formData.append("middle_name", middleName || "");
   formData.append("last_name", lastName);
@@ -47,6 +48,14 @@ export const register = async ({
   formData.append("post_office_code", "");
   formData.append("nature_of_disability", "");
   formData.append("otp", otp);
+
+  formData = appendImageToFormdata(
+    echsPrimaryCardImage,
+    "echs_primary_card_image",
+    formData
+  );
+
+  console.log(echsPrimaryCardImage);
 
   return await fetch(registerURL, {
     method: "POST",
