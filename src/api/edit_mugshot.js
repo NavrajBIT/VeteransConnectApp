@@ -3,7 +3,7 @@ import { getUserDetailsURL } from "../constants/api_constants";
 import { appendImageToFormdata } from "./tools";
 
 export const editMugshot = async (mugshot) => {
-  const formData = new FormData();
+  let formData = new FormData();
   formData = appendImageToFormdata(mugshot, "mugshot", formData);
 
   const token = await AsyncStorage.getItem("token");

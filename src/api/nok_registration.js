@@ -41,7 +41,7 @@ export const registerUserNOK = async ({
 
   formData = appendImageToFormdata(
     aadharCardFront,
-    "addharcard_front",
+    "aadharcard_front",
     formData
   );
 

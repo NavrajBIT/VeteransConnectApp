@@ -39,8 +39,8 @@ const ProfileSection = ({ name, email, imageUri }) => {
           style={styles.profileImage}
         />
         {/* Edit Icon */}
-        <TouchableOpacity style={styles.editIcon}>
-          <Ionicons name="pencil" size={16} color="white" onPress={updatePic} />
+        <TouchableOpacity style={styles.editIcon} onPress={updatePic}>
+          <Ionicons name="pencil" size={16} color="white" />
         </TouchableOpacity>
       </View>
 

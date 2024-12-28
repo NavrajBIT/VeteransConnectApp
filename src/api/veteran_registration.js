@@ -40,7 +40,7 @@ export const registerVeteran = async ({
 
   formData = appendImageToFormdata(
     aadharCardFront,
-    "addharcard_front",
+    "aadharcard_front",
     formData
   );
 

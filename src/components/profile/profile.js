@@ -15,7 +15,7 @@ export const Profile = ({ userDetails }) => {
           name={user.first_name}
           email={user.email}
           imageUri={
-            `http://13.235.238.211${userDetails.data.mugshot}` ||
+            `http://192.168.1.8:8000${userDetails.data.mugshot}` ||
             "https://via.placeholder.com/100"
           }
         />

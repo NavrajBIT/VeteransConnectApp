@@ -41,7 +41,7 @@ export const editProfile = async ({
 
   formData = appendImageToFormdata(
     aadharCardFront,
-    "addharcard_front",
+    "aadharcard_front",
     formData
   );
 
@@ -83,6 +83,9 @@ export const editProfile = async ({
   formData.append("state", state);
   formData.append("pincode", pinCode);
   formData.append("post_office_code", postOfficeCode);
+
+  console.log("---------------------");
+  console.log(formData);
 
   const token = await AsyncStorage.getItem("token");
 

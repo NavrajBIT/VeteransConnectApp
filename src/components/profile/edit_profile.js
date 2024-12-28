@@ -98,7 +98,7 @@ export const EditProfile = ({ route }) => {
       await editProfile({
         isUpdate: true,
         aadharCardFront: aadharFrontImage,
-        addharCardBack: aadharBackImage,
+        aadharCardBack: aadharBackImage,
         panCardImage: panImage,
         addressProof: addressImage,
         firstName: firstName,

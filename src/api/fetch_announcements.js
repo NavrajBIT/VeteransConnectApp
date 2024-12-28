@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { announcementURL, highlightsURL } from "../constants/api_constants";
-import { useNavigation } from "@react-navigation/native";
 
 export const fetchTrendingPosts = async () => {
   const token = await AsyncStorage.getItem("token");

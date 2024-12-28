@@ -110,7 +110,7 @@ export const VeteransRegistration = () => {
       await registerVeteran({
         isUpdate: false,
         aadharCardFront: aadharFrontImage,
-        addharCardBack: aadharBackImage,
+        aadharCardBack: aadharBackImage,
         panCardImage: panImage,
         addressProof: addressImage,
         firstName: firstName,

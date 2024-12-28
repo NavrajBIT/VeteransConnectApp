@@ -100,7 +100,7 @@ export const NokRegistration = () => {
       await registerUserNOK({
         isUpdate: true,
         aadharCardFront: aadharFrontImage,
-        addharCardBack: aadharBackImage,
+        aadharCardBack: aadharBackImage,
         panCardImage: panImage,
         addressProof: addressImage,
         firstName: firstName,
@@ -110,7 +110,7 @@ export const NokRegistration = () => {
         headquarters: headquaters,
         rank: rank,
         dateOfBirth: dob,
-        dateOfEnrollment : enrollmentDate,
+        dateOfEnrollment: enrollmentDate,
         dateOfDeath: dateOfDeath,
         isGalantry: gallantaryAwards,
         isPension: pension,
@@ -124,12 +124,12 @@ export const NokRegistration = () => {
         adharCardNumber: aadharCardNumber,
         panCard: panCard,
         pensionUid: pensionUID,
-        domicile : Domicile,
+        domicile: Domicile,
         address,
         city,
         state,
         pinCode,
-        postOfficeCode : PostofficeCode,
+        postOfficeCode: PostofficeCode,
       })
         .then((res) => {
           if (res.ok) {
