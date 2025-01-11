@@ -234,13 +234,23 @@ export const VeteransRegistration = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Popup status={status} setStatus={setStatus} />
-      <TouchableOpacity
-        style={{ paddingLeft: 20 }}
-        onPress={() => navigation.navigate("Home")}
-      >
-        <PrimaryText children={"<"} textAlign={"left"} fontSize={60} />
-      </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <TouchableOpacity
+          style={{
+            margin: 10,
+            backgroundColor: "green",
+            borderRadius: 10,
+            width: 60,
+          }}
+          onPress={() => navigation.navigate("Home")}
+        >
+          <PrimaryText
+            children={"<"}
+            textAlign={"center"}
+            fontSize={50}
+            color={"white"}
+          />
+        </TouchableOpacity>
         <BoldText
           children={"Veteran Registration"}
           fontSize={20}
@@ -378,7 +388,7 @@ export const VeteransRegistration = ({ navigation }) => {
             options={relationOptions}
             selectedValue={relationShipStatus}
             onValueChange={setrelationShipStatus}
-            placeholder="Select RelationShipStatus"
+            placeholder="Select Relationship Status"
           />
           <TextField
             label={"Aadhar Number"}
@@ -662,7 +672,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F9F9F9",
-    paddingTop: 20,
+    paddingTop: 40,
   },
   scrollContainer: {
     paddingHorizontal: 20,

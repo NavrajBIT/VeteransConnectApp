@@ -15,19 +15,22 @@ export const BlogDetails = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState(null);
 
-  const { width } = Dimensions.get("window").width;
+  function replaceHttpWithHttps(url) {
+    if (typeof url !== "string") {
+      throw new Error("Input must be a string");
+    }
+    return url.replace(/^http:/, "https:");
+  }
 
   useEffect(() => {
     const fetchDetails = async () => {
       setLoading(true);
       await fetchPostDetails(announcement.id)
         .then(async (res) => {
-          console.log(res);
           if (res.ok) {
             const data = await res.json();
-            console.log(data);
+            data.thumbnail = replaceHttpWithHttps(data.thumbnail);
             setPost(data);
-            console.log("data set successfully");
           }
         })
         .catch((err) => {
@@ -40,31 +43,46 @@ export const BlogDetails = ({ navigation }) => {
     fetchDetails();
   }, []);
 
-  if (loading || !post) return <Loadingscreen />;
-
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
+        style={{
+          margin: 10,
+          backgroundColor: "green",
+          borderRadius: 10,
+          width: 60,
+          height: 60,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
         onPress={() => navigation.goBack()}
-        style={{ paddingLeft: 20 }}
       >
-        <Text style={{ fontSize: 50, color: "green" }}>{"<"}</Text>
+        <Text
+          children={"<"}
+          style={{ fontSize: 40, color: "white", textAlign: "center" }}
+        />
       </TouchableOpacity>
 
-      <WebView
-        originWhitelist={["*"]}
-        source={{
-          html: `<head>
+      {loading || !post ? (
+        <Loadingscreen />
+      ) : (
+        <WebView
+          originWhitelist={["*"]}
+          source={{
+            html: `<head>
           <meta content="width=width, initial-scale=1, maximum-scale=1" name="viewport"></meta>
         </head>
         <body >
+      
        <img src="${post.thumbnail}" alt="${post.title}" width="100%">
        <h1>${post.title}</h1>
         ${post.body}
         
         </body>`,
-        }}
-      />
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -73,6 +91,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F9F9F9",
-    paddingTop: 20,
+    paddingTop: 40,
   },
 });

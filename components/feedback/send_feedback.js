@@ -23,13 +23,20 @@ export const SendFeedback = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={{ paddingLeft: 20 }}
-      >
-        <Text style={{ fontSize: 50, color: "green" }}>{"<"}</Text>
-      </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            margin: 10,
+            backgroundColor: "green",
+            borderRadius: 10,
+            width: 60,
+          }}
+        >
+          <Text style={{ fontSize: 50, color: "white", textAlign: "center" }}>
+            {"<"}
+          </Text>
+        </TouchableOpacity>
         <BoldText children="Send Feedback" fontSize={20} textAlign="left" />
         <View style={{ paddingTop: 30 }}></View>
         <TextField
@@ -73,7 +80,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F9F9F9",
-    paddingTop: 20,
+    paddingTop: 40,
   },
   scrollContainer: {
     paddingHorizontal: 20,

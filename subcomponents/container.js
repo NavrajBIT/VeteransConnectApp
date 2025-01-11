@@ -2,6 +2,7 @@ import {
   ImageBackground,
   Platform,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   View,
 } from "react-native";

@@ -14,20 +14,20 @@ import { PrimaryText } from "../../subcomponents/text";
 export const Profile = ({ navigation }) => {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const getData = async () => {
-      fetchUserData()
-        .then(async (res) => {
-          if (res.ok) {
-            const data = await res.json();
-            console.log(data);
-            if (data.data) {
-              setUser(data.data);
-            }
+  const getData = async () => {
+    fetchUserData()
+      .then(async (res) => {
+        if (res.ok) {
+          const data = await res.json();
+          console.log(data);
+          if (data.data) {
+            setUser(data.data);
           }
-        })
-        .catch((res) => console.log(res));
-    };
+        }
+      })
+      .catch((res) => console.log(res));
+  };
+  useEffect(() => {
     getData();
   }, []);
 
@@ -48,8 +48,9 @@ export const Profile = ({ navigation }) => {
         <ProfileSection
           name={user.user.first_name}
           email={user.user.email}
+          getData={getData}
           imageUri={
-            `http://192.168.1.8:8000${user.mugshot}` ||
+            `https://veteransconnect.club${user.mugshot}` ||
             "https://via.placeholder.com/100"
           }
         />
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F9F9F9",
-    paddingTop: 20,
+    paddingTop: 40,
   },
   scrollContainer: {
     paddingHorizontal: 20,

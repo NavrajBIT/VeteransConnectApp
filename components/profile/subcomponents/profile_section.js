@@ -13,7 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 
 const { width } = Dimensions.get("window");
 
-const ProfileSection = ({ name, email, imageUri }) => {
+const ProfileSection = ({ name, email, imageUri, getData }) => {
   const updatePic = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
@@ -24,7 +24,7 @@ const ProfileSection = ({ name, email, imageUri }) => {
 
     if (!result.canceled) {
       await editMugshot(result.assets[0].uri)
-        .then((res) => console.log(res))
+        .then((res) => getData())
         .catch((err) => console.log(err));
     }
   };

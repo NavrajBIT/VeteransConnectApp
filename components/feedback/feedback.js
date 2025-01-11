@@ -97,13 +97,23 @@ export const Feedback = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Popup status={status} setStatus={setStatus} />
-      <TouchableOpacity
-        style={{ paddingLeft: 20 }}
-        onPress={() => navigation.navigate("ViewFeedback")}
-      >
-        <PrimaryText children={"<"} textAlign={"left"} fontSize={60} />
-      </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <TouchableOpacity
+          style={{
+            margin: 10,
+            backgroundColor: "green",
+            borderRadius: 10,
+            width: 60,
+          }}
+          onPress={() => navigation.navigate("ViewFeedback")}
+        >
+          <PrimaryText
+            children={"<"}
+            textAlign={"center"}
+            color={"white"}
+            fontSize={60}
+          />
+        </TouchableOpacity>
         <BoldText children="Feedback" fontSize={20} textAlign="left" />
         <View style={{ paddingTop: 30 }}></View>
         <View style={styles.card}>
@@ -180,7 +190,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F9F9F9",
-    paddingTop: 20,
+    paddingTop: 40,
   },
   scrollContainer: {
     paddingHorizontal: 20,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View, ScrollView } from "react-native";
 import { sendOtp } from "../../api/send_otp";
 import { PrimaryButton } from "../../subcomponents/button";
 import { Container } from "../../subcomponents/container";
@@ -59,6 +59,7 @@ export const Login = ({ navigation }) => {
   return (
     <Container>
       <Popup status={status} setStatus={setStatus} cta={cta} />
+
       <View
         style={{
           flex: 1,

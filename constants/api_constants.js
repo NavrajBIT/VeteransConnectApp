@@ -1,7 +1,8 @@
 const version = "api/v1/";
 // const API_URL = "http://13.235.238.211/";
 // const API_URL = "http://192.168.1.9:8000/";
-const API_URL = "http://13.203.131.8/";
+// const API_URL = "http://13.203.131.8/";
+const API_URL = "https://veteransconnect.club/";
 
 export const loginURL = `${API_URL}${version}auth/login/`;
 export const registerURL = `${API_URL}${version}auth/register/`;

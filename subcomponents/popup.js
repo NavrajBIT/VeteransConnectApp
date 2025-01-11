@@ -31,12 +31,13 @@ const Popup = ({ status, setStatus, cta }) => {
     <View
       style={{
         width: "100%",
-        height: "100%",
+        height: "110%",
         position: "absolute",
         top: 0,
         left: 0,
         backgroundColor: "rgba(0,0,0,0.6)",
         zIndex: 5,
+        elevation: 6,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

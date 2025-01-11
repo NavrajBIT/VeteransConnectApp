@@ -226,13 +226,23 @@ export const EditProfile = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Popup status={status} setStatus={setStatus} />
-      <TouchableOpacity
-        style={{ paddingLeft: 20, marginTop: 20 }}
-        onPress={() => navigation.goBack()}
-      >
-        <PrimaryText children={"<"} textAlign={"left"} fontSize={60} />
-      </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <TouchableOpacity
+          style={{
+            margin: 10,
+            backgroundColor: "green",
+            borderRadius: 10,
+            width: 60,
+          }}
+          onPress={() => navigation.goBack()}
+        >
+          <PrimaryText
+            children={"<"}
+            textAlign={"center"}
+            fontSize={60}
+            color={"white"}
+          />
+        </TouchableOpacity>
         <BoldText children={"Edit Profile"} fontSize={20} textAlign={"left"} />
         <View style={{ paddingTop: 20 }}>
           <TextField
@@ -710,6 +720,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F9F9F9",
+    paddingTop: 40,
   },
   scrollContainer: {
     paddingHorizontal: 20,
