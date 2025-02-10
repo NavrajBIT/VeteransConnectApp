@@ -18,6 +18,8 @@ import { BlogDetails } from "./components/blog_details/blogDetails";
 import { VeteransRegistration } from "./components/veterans_registration/veterans_registration";
 import { NokRegistration } from "./components/nok_registration/nok_registration";
 import { EchsRegistration } from "./components/echs_registration/echs_registration";
+import Idcard from "./components/idcard/idcard";
+import Scanner from "./components/scanner/scanner";
 
 export default function App() {
   const [route, setRoute] = useState("Loader");
@@ -70,6 +72,8 @@ export default function App() {
     ViewFeedback: <ViewFeedback navigation={navigation} />,
     SendFeedback: <SendFeedback navigation={navigation} />,
     Feedback: <Feedback navigation={navigation} />,
+    Idcard: <Idcard navigation={navigation} />,
+    Scanner: <Scanner navigation={navigation} />,
   };
 
   return pages[route];

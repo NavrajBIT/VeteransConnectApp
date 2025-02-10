@@ -50,7 +50,7 @@ export const Profile = ({ navigation }) => {
           email={user.user.email}
           getData={getData}
           imageUri={
-            `https://veteransconnect.club${user.mugshot}` ||
+            `http://192.168.1.10:8000${user.mugshot}` ||
             "https://via.placeholder.com/100"
           }
         />

@@ -21,7 +21,7 @@ const Loadingscreen = () => {
 
 export default Loadingscreen;
 
-const Loaderanim = () => {
+export const Loaderanim = () => {
   const [currentPos, setCurrentPos] = useState(0);
 
   useEffect(() => {

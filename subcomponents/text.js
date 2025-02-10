@@ -2,7 +2,7 @@ import { Text } from "react-native";
 import Preferences from "./preferences";
 import { translation } from "./localization/translation";
 
-export const BoldText = ({ children, fontSize, textAlign }) => {
+export const BoldText = ({ children, fontSize, textAlign, color }) => {
   const { ln } = Preferences();
   let text = "";
   try {
@@ -16,6 +16,7 @@ export const BoldText = ({ children, fontSize, textAlign }) => {
         fontWeight: "bold",
         fontSize: fontSize ? fontSize : 14,
         textAlign: textAlign ? textAlign : "center",
+        color: color ? color : "#000000",
       }}
     >
       {text}

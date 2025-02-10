@@ -26,7 +26,21 @@ const Menu = ({ navigation }) => {
           navigation.navigate("EditProfile");
         }}
       />
-      <MenuItem icon="bookmark-outline" label="Bookmarks" />
+      {/* <MenuItem icon="bookmark-outline" label="Bookmarks" /> */}
+      <MenuItem
+        icon="document"
+        label="Id Card"
+        onPress={() => {
+          navigation.navigate("Idcard");
+        }}
+      />
+      <MenuItem
+        icon="qr-scanner"
+        label="Verify"
+        onPress={() => {
+          navigation.navigate("Scanner");
+        }}
+      />
       <MenuItem icon="information-circle-outline" label="Version" />
       <MenuItem
         icon="text-outline"
